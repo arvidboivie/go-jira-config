@@ -1,0 +1,8 @@
+{{/* table template */ -}}
++{{ "-" | rep 10 }}+{{ "-" | rep 22 }}+{{ "-" | rep 14 }}+{{ "-" | rep 18 }}+
+| {{ "Issue" | printf "%-8s" }} | {{ "Summary" | printf "%-20s" }} | {{ "Status" | printf "%-12s" }} | {{ "Assignee" | printf "%-16s" }} |
++{{ "-" | rep 10 }}+{{ "-" | rep 22 }}+{{ "-" | rep 14 }}+{{ "-" | rep 18 }}+
+{{ range .issues -}}
+  | {{ .key | printf "%-8s"}} | {{ .fields.summary | abbrev 20 | printf (printf "%%-%ds" 20) }} | {{.fields.status.name | abbrev 12 | printf "%-12s" }} | {{if .fields.assignee }}{{.fields.assignee.name | abbrev 16 | printf "%-16s" }}{{else}}{{"<unassigned>" | printf "%-16s"}}{{end}} |
+{{ end -}}
++{{ "-" | rep 10 }}+{{ "-" | rep 22 }}+{{ "-" | rep 14 }}+{{ "-" | rep 18 }}+

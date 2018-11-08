@@ -1,0 +1,9 @@
+{{/* table template */ -}}
+{{$w := sub termWidth 117 -}}
++{{ "-" | rep 10 }}+{{ "-" | rep $w }}+{{ "-" | rep 14 }}+{{ "-" | rep 14 }}+{{ "-" | rep 18 }}+
+| {{ "Issue" | printf "%-8s" }} | {{ "Summary" | printf (printf "%%-%ds" (sub $w 2)) }} | {{ "Type" | printf "%-12s"}} | {{ "Status" | printf "%-12s" }} | {{ "Assignee" | printf "%-16s" }} |
++{{ "-" | rep 10 }}+{{ "-" | rep $w }}+{{ "-" | rep 14 }}+{{ "-" | rep 14 }}+{{ "-" | rep 18 }}+
+{{ range .issues -}}
+  | {{ .key | printf "%-8s"}} | {{ .fields.summary | abbrev (sub $w 2) | printf (printf "%%-%ds" (sub $w 2)) }} | {{.fields.issuetype.name | printf "%-12s" }} | {{.fields.status.name | abbrev 12 | printf "%-12s" }} | {{if .fields.assignee }}{{.fields.assignee.name | abbrev 16 | printf "%-16s" }}{{else}}{{"<unassigned>" | printf "%-16s"}}{{end}} |
+{{ end -}}
++{{ "-" | rep 10 }}+{{ "-" | rep $w }}+{{ "-" | rep 14 }}+{{ "-" | rep 14 }}+{{ "-" | rep 18 }}+
