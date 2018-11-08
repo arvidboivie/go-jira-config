@@ -1,0 +1,6 @@
+#!/bin/sh
+
+echo "issuetype: Story"
+echo "overrides:"
+echo "  assignee: $JIRA_USER"
+
