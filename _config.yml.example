@@ -1,0 +1,5 @@
+endpoint: <jira url>
+user: <username>
+login: <jira login name> #This is used for logging in, user is for assigning and such
+password-source: keyring
+project: <default project key>
