@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cat _config.yml
+cat _custom_commands.yml

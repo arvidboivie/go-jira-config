@@ -1,0 +1,70 @@
+custom-commands:
+  - name: mine
+    help: display issues assigned to me
+    script: |-
+      {{jira}} list --query "resolution = unresolved and assignee=currentuser() ORDER BY created"
+  - name: testing
+    help: transition issue to "In test"
+    args:
+      - name: ISSUE
+        required: true
+    script: |
+      {{jira}} transition "In test" {{args.ISSUE}} --noedit
+  - name: review
+    help: transition issue to "In review"
+    args:
+      - name: ISSUE
+        required: true
+    script: |
+      {{jira}} transition "In review" {{args.ISSUE}} --noedit
+  - name: stall
+    help: transition issue to "Stalled"
+    args:
+      - name: ISSUE
+        required: true
+    script: |
+      {{jira}} transition "Stalled" {{args.ISSUE}} --noedit
+  - name: do
+    help: take and move issue to "In progress"
+    args:
+      - name: ISSUE
+        required: true
+    script: |
+      {{jira}} take {{args.ISSUE}}
+      {{jira}} in-progress {{args.ISSUE}}
+  - name: sprint-add
+    help: add issue to active sprint for project
+    args:
+      - name: ISSUE
+        required: true
+    script: |
+      board_id=$({{jira}} req "/rest/agile/1.0/board?projectKeyOrId=$JIRA_PROJECT" --gjq values.2.id) #You need to modify this value (2) to work with your project. Try running this command without --gjq to see the values
+      sprint_id=$({{jira}} req "/rest/agile/1.0/board/$board_id/sprint?state=active" --gjq values.0.id)
+      {{jira}} req -M POST "/rest/agile/1.0/sprint/$sprint_id/issue" "{\"issues\":[\"{{args.ISSUE}}\"]}" >/dev/null
+      echo "{{args.ISSUE}} added to current sprint"
+  - name: screate
+    help: creates a task in the current sprint
+    script: |-
+      board_id=$({{jira}} req "/rest/agile/1.0/board?projectKeyOrId=$JIRA_PROJECT" --gjq values.2.id)
+      sprint_id=$({{jira}} req "/rest/agile/1.0/board/$board_id/sprint?state=active" --gjq values.0.id)
+      {{jira}} create -t screate -o sprint=$sprint_id
+  - name: sprint
+    help: display issues for active sprint
+    options:
+      - name: big
+        type: bool
+        required: false
+        default: false
+        short: b
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          if [ {{options.big}} = true ]; then
+            {{jira}} list --template sprint-table-big --query "sprint in openSprints() and type != epic and resolution = unresolved and project=$JIRA_PROJECT ORDER BY rank asc, created"
+          else
+            {{jira}} list --template sprint-table --query "sprint in openSprints() and type != epic and resolution = unresolved and project=$JIRA_PROJECT ORDER BY rank asc, created"
+          fi
+      else
+          # otherwise list issues for all project
+          echo "\"project: ...\" configuration missing from .jira.d/config.yml"
+      fi
