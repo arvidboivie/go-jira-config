@@ -48,6 +48,16 @@ custom-commands:
       board_id=$({{jira}} req "/rest/agile/1.0/board?projectKeyOrId=$JIRA_PROJECT" --gjq values.2.id)
       sprint_id=$({{jira}} req "/rest/agile/1.0/board/$board_id/sprint?state=active" --gjq values.0.id)
       {{jira}} create -t screate -o sprint=$sprint_id
+  - name: smine
+    help: display issues for active sprint
+    script: |-
+      if [ -n "$JIRA_PROJECT" ]; then
+          # if `project: ...` configured just list the issues for current project
+          {{jira}} list --template smine-table --query "sprint in openSprints() and type != epic and resolution = unresolved and project=$JIRA_PROJECT and assignee=currentuser() ORDER BY rank asc, created"
+      else
+          # otherwise list issues for all project
+          echo "\"project: ...\" configuration missing from .jira.d/config.yml"
+      fi
   - name: sprint
     help: display issues for active sprint
     options:
