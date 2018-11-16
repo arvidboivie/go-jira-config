@@ -32,7 +32,7 @@ custom-commands:
     script: |
       {{jira}} take {{args.ISSUE}}
       {{jira}} in-progress {{args.ISSUE}}
-  - name: sprint-add
+  - name: sadd
     help: add issue to active sprint for project
     args:
       - name: ISSUE
