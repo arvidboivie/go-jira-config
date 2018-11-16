@@ -1,4 +1,4 @@
 #!/bin/sh
 
-cat _config.yml
-cat _custom_commands.yml
+cat "/Users/arbo/.jira.d/_config.yml"
+cat "/Users/arbo/.jira.d/_custom_commands.yml"
